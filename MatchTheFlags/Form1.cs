@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,6 +21,7 @@ namespace MatchTheFlags
         int bulunanCiftAdet;
         int[] tumResimNolar;
         int[] kartlar;
+        Button btnYenidenBaslat;
 
         public Form1()
         {
@@ -29,6 +31,18 @@ namespace MatchTheFlags
 
         private void OyunuBaslat()
         {
+            panel1.Controls.Clear();
+
+            #region Yeniden Başlat Butonunun Eklenip Gizlenmesi
+            btnYenidenBaslat = new Button();
+            btnYenidenBaslat.Text = "Yeniden Başlat";
+            btnYenidenBaslat.Location = new Point(192, 233);
+            btnYenidenBaslat.Size = new Size(120, 23);
+            btnYenidenBaslat.Click += BtnYenidenBaslat_Click;
+            btnYenidenBaslat.Visible = false;
+            panel1.Controls.Add(btnYenidenBaslat);
+            #endregion
+
             #region Oyun Değişkenlerinin Hesaplanması
             bulunanCiftAdet = 0;
             aciklar = new List<PictureBox>();
@@ -71,9 +85,69 @@ namespace MatchTheFlags
             #endregion
         }
 
+        private void BtnYenidenBaslat_Click(object sender, EventArgs e)
+        {
+            OyunuBaslat();
+        }
+
         private void KartaTiklandiginda(object sender, EventArgs e)
         {
-            
+            PictureBox tiklanan = (PictureBox)sender;
+
+            if (aciklar.Contains(tiklanan))
+                return;
+
+            if (aciklar.Count == 2)
+            {
+                AcikKartlariKapat();
+            }
+
+            KartiAc(tiklanan);
+
+            if (aciklar.Count == 2 && (int)aciklar[0].Tag == (int)aciklar[1].Tag)
+            {
+                Refresh();
+                Thread.Sleep(400);
+                AciklariKapatGizle();
+                bulunanCiftAdet++;
+
+                if (bulunanCiftAdet == cift)
+                {
+                    MessageBox.Show("Oyun Bitti!");
+                    btnYenidenBaslat.Show();
+                }
+            }
+        }
+
+        private void AciklariKapatGizle()
+        {
+            while (aciklar.Count > 0)
+            {
+                aciklar[0].Hide();
+                KartiKapat(aciklar[0]);
+            }
+        }
+
+        private void KartiAc(PictureBox kart)
+        {
+            int resimNo = (int)kart.Tag;
+            kart.Image = (Image)Resources.ResourceManager.GetObject("_" + resimNo);
+            aciklar.Add(kart);
+        }
+
+        private void AcikKartlariKapat()
+        {
+            while (aciklar.Count > 0)
+            {
+                KartiKapat(aciklar[0]);
+            }
+        }
+
+        private void KartiKapat(PictureBox kart)
+        {
+            int resimNo = (int)kart.Tag;
+            kart.Image = null;
+            aciklar.Remove(kart);
         }
 
         private void Karistir(int[] dizi)

@@ -46,6 +46,7 @@ namespace MatchTheFlags
             this.ClientSize = new System.Drawing.Size(527, 525);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Match the Flags";
             this.ResumeLayout(false);
 
