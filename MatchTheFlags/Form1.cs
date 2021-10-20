@@ -98,9 +98,7 @@ namespace MatchTheFlags
                 return;
 
             if (aciklar.Count == 2)
-            {
                 AcikKartlariKapat();
-            }
 
             KartiAc(tiklanan);
 
@@ -138,9 +136,7 @@ namespace MatchTheFlags
         private void AcikKartlariKapat()
         {
             while (aciklar.Count > 0)
-            {
                 KartiKapat(aciklar[0]);
-            }
         }
 
         private void KartiKapat(PictureBox kart)
